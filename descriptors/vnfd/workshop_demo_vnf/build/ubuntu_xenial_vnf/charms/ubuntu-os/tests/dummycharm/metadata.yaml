@@ -1,0 +1,7 @@
+name: dummycharm
+summary: A test charm
+maintainer: Adam Israel <adam.israel@canonical.com>
+description: This is a test charm.
+series:
+    - trusty
+    - xenial

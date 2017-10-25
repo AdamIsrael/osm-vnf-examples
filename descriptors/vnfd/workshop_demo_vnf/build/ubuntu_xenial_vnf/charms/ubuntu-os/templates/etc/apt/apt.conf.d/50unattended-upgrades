@@ -1,0 +1,12 @@
+Unattended-Upgrade::Allowed-Origins {
+        "${distro_id}:${distro_codename}";
+        {% for component in components %}
+        "${distro_id}:${distro_codename}-{{ component }}";
+        {% endfor %}
+};
+
+Unattended-Upgrade::Package-Blacklist {
+{% for package in blacklist %}
+    "{{ package }}";
+{% endfor %}
+};

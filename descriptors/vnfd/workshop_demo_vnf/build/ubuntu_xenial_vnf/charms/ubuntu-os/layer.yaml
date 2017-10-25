@@ -1,0 +1,13 @@
+"options":
+  "sshproxy": {}
+  "ubuntu-os": {}
+  "vnfproxy": {}
+  "basic":
+    "use_venv": !!bool "false"
+    "packages": []
+    "include_system_packages": !!bool "false"
+"includes":
+- "layer:basic"
+- "layer:sshproxy"
+- "layer:vnfproxy"
+"is": "ubuntu-os"

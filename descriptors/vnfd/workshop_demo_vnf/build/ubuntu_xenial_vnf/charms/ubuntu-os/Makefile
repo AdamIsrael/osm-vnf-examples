@@ -1,0 +1,78 @@
+PY := venv/bin/python3
+# If the bin version does not exist look in venv/local/bin
+ifeq ($(wildcard venv/bin/pip),)
+  PIP = venv/local/bin/pip3
+else
+  PIP = venv/bin/pip3
+endif
+# If the bin version does not exist look in venv/local/bin
+ifeq ($(wildcard venv/bin/nosetests),)
+  NOSE = venv/local/bin/nosetests
+else
+  NOSE = venv/bin/nosetests
+endif
+
+PROJECT=charms.sshproxy
+
+# ###########
+# Build
+# ###########
+
+venv: $(PY)
+$(PY):
+	virtualenv -p python3 venv
+
+.PHONY: clean_all
+clean_all: clean clean_venv
+
+.PHONY: clean_venv
+clean_venv:
+	rm -rf venv
+
+.PHONY: clean
+clean:
+	rm -rf MANIFEST dist/* $(PROJECT).egg-info .coverage
+	find . -name '*.pyc' -delete
+	rm -rf venv
+
+# ###########
+# Develop
+# ###########
+
+$(NOSE): $(PY)
+	$(PIP) install -r wheelhouse.txt
+	$(PIP) install -r test-requirements.txt
+
+.PHONY: test
+test: $(NOSE)
+	make py3test
+
+.PHONY: unit_test
+unit_test: $(NOSE)
+	make ARGS="-e functional" py3test
+
+.PHONY: functional_test
+functional_test: $(NOSE)
+	make ARGS="tests/functional" py3test
+
+# This is a private target used to get around finding nose in different paths.
+# Do not call this manually, just use make test.
+.PHONY: py3test
+py3test:
+	@echo Testing Python 3...
+	@$(NOSE) --nologcapture $(ARGS)
+
+.PHONY: coverage
+coverage: $(NOSE)
+	@echo Testing with coverage...
+	@$(NOSE) --nologcapture --with-coverage --cover-package=$(PROJECT)
+
+.PHONY: lint
+lint:
+	@find $(sources) -type f \( -iname '*.py' ! -iname '__init__.py' ! -iwholename '*venv/*' \) -print0 | xargs -r0 flake8
+
+.PHONY: check
+check: test lint
+
+.PHONY: all
+all: clean venv coverage lint

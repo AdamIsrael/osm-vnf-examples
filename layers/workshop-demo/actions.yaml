@@ -1,0 +1,2 @@
+hostname:
+    description: Get the hostname of the charm vm
