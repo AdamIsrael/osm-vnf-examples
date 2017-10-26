@@ -1,12 +1,11 @@
 name: workshop-demo
-summary: <Fill in summary here>
-maintainer: Adam Israel <Adam.Israel@ronin>
+summary: A very simple example of a proxy charm for OSM
+maintainer: Adam Israel <adam.israel@canonical.com>
 description: |
   <Multi-line description here>
 tags:
-  # Replace "misc" with one or more whitelisted tags from this list:
-  # https://jujucharms.com/docs/stable/authors-charm-metadata
-  - misc
+  - vnf
+  - osm 
 subordinate: false
 series:
     - xenial
